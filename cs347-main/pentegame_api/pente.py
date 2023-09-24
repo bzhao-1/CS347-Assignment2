@@ -7,6 +7,7 @@ API for two-player game of Pente
 CS 347 - Advance Software Design 
 '''
 
+import random
 import flask
 import json 
 import sys
@@ -76,8 +77,12 @@ def new_game(player):
     current += 1
     gameID = current
     boardSetup = [['-' for i in range(20)] for j in range(20)]
-    if player == 'x':
-        boardSetup[19//2][19//2] = 'x'
+    '''Randomly place 5 pieces for each player'''
+    for _ in range(5):  
+        row = random.randint(0, 19)
+        col = random.randint(0, 19)
+        if boardSetup[row][col] == '-':
+            boardSetup[row][col] = 'x' if player == 'x' else 'o'
     formatted_board = get_board(boardSetup)
     gameState = 'player:' + player + '#' + 'board:' + formatted_board + '#' + 'capturedX: 0' + '#' + 'capturedO: 0'
     games[gameID] =  {'player': player, 'board': boardSetup, 'capturedX': 0, 'capturedO': 0}

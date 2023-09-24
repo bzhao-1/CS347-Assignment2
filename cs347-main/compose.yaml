@@ -1,0 +1,5 @@
+services:
+    api:
+        build: ./pentegame_api
+        expose:
+          - "8080"
