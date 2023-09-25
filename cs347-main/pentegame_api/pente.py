@@ -79,13 +79,21 @@ def new_game(player):
     boardSetup = [['-' for i in range(20)] for j in range(20)]
     '''Randomly place 5 pieces for each player'''
     for _ in range(5):  
-        row = random.randint(0, 19)
-        col = random.randint(0, 19)
-        if boardSetup[row][col] == '-':
-            boardSetup[row][col] = 'x' if player == 'x' else 'o'
+        while True:
+            row = random.randint(0, 19)
+            col = random.randint(0, 19)
+            if boardSetup[row][col] == '-':
+                boardSetup[row][col] = 'x' 
+                break
+        while True:
+            row = random.randint(0, 19)
+            col = random.randint(0, 19)
+            if boardSetup[row][col] == '-':
+                boardSetup[row][col] = 'o' 
+                break
     formatted_board = get_board(boardSetup)
-    gameState = 'player:' + player + '#' + 'board:' + formatted_board + '#' + 'capturedX: 0' + '#' + 'capturedO: 0'
-    games[gameID] =  {'player': player, 'board': boardSetup, 'capturedX': 0, 'capturedO': 0}
+    gameState = 'player:' + player + '#' + 'board:' + formatted_board + '#' + 'capturedX: 5' + '#' + 'capturedO: 5'
+    games[gameID] =  {'player': player, 'board': boardSetup, 'capturedX': 5, 'capturedO': 5}
     return json.dumps({'ID':gameID, 'state':gameState})
 
 
@@ -98,29 +106,28 @@ def new_move(gameID, row, col):
     capturedX = gameState.get('capturedX')
     capturedO = gameState.get('capturedO')
     
-    #place opponent's spot
+    # Check if the spot is already taken
     if board[row][col] != '-':
-        raise Exception("This spot is already taken!")   
-    elif player == 'X' or player == 'x':
-        board[row][col] = 'o'  
+        return flask.jsonify({"message": "This spot is already taken.", "error": True}), 400
+
+    # Update the board with the move
+    if player == 'X' or player == 'x':
+        board[row][col] = 'o'
     else:
         board[row][col] = 'x'
 
-    # place player's spot 
+    # Find an available spot for the player
     temp = False
-    for rowIndex, row in enumerate(board): 
+    for rowIndex, row in enumerate(board):
         for colIndex, col in enumerate(row):
-            if col == "-": # pick the first available spot
-                board[rowIndex][colIndex] = player 
+            if col == "-":  # Pick the first available spot
+                board[rowIndex][colIndex] = player
                 myRow, myCol = rowIndex, colIndex
                 temp = True
                 break
-        if temp: break
-
-    
+        if temp:
+            break
     #loop through the board and check if there are any new captures
-    captureX = 0
-    captureY = 0
     for rowIndex, row in enumerate(board):
         for colIndex, col in enumerate(row):
             if col == 'o':
@@ -141,6 +148,4 @@ if __name__ == '__main__':
     parser.add_argument('port', type = int, help = 'the port in which this application is listening')
     arguments = parser.parse_args()
     app.run(host = arguments.host, port = arguments.port, debug= True)
-    
-    
     
