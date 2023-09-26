@@ -1,5 +1,9 @@
 services:
     api:
         build: ./pentegame_api
+        ports:
+          - "8080:8080"
+    evaluator:
+        build: ./player_evaluation
         expose:
           - "8080"

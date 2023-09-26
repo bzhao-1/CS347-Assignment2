@@ -14,7 +14,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 RUN pip install flask
 RUN pip install requests
 
-# We want port 5000
+# We want port 8080 to be exposed to the outside world
 EXPOSE 8080
 
 # We copy everything in the current directory on our machine 
