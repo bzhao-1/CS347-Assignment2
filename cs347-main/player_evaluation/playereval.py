@@ -1,7 +1,7 @@
 import random
 import subprocess
 import json
-API_URL = "http://api:8080"
+API_URL = "http://localhost:8080"
 
 
 NUM_GAMES = 10

@@ -9,7 +9,7 @@ RUN apk --no-cache add curl
 # and sets that directory to be the current directory for all further commands
 WORKDIR /code
 
-# Copy 'playereval.py' and any dependencies (if needed)
+# Copy 'playereval.py'
 COPY playereval.py /app/
 
 # When the container starts running,
